@@ -2,12 +2,14 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
+  Delete,
   Body,
   BadRequestException,
   Param,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { PostDTO } from './dto/post';
+import { PostDTO, ParamDTO } from './dto/post';
 import { error } from 'console';
 
 @Controller('products')
@@ -34,8 +36,26 @@ export class ProductsController {
   }
 
   @Get(':id')
-  getOneProduct(@Param('id') prodId: string) {
-    const product = this.productsService.getOneProduct(prodId);
+  getOneProduct(@Param() param: ParamDTO) {
+    const product = this.productsService.getOneProduct(param.id);
     return product;
+  }
+
+  @Patch(':id')
+  updateProduct(@Param() param: ParamDTO, @Body() body: PostDTO) {
+    const id = param.id;
+    this.productsService.updateProduct(
+      id,
+      body.title,
+      body.description,
+      body.price,
+    );
+    return { success: true, message: 'Updated' };
+  }
+
+  @Delete(':id')
+  removeProduct(@Param() param: ParamDTO) {
+    this.productsService.deleteProduct(param.id);
+    return { success: true, message: 'Deleted' };
   }
 }

@@ -4,4 +4,7 @@ class PostDTO {
   price: number;
 }
 
-export { PostDTO };
+class ParamDTO {
+  id: string;
+}
+export { PostDTO, ParamDTO };
